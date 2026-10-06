@@ -266,11 +266,254 @@
         height: 320px;
       }
     }
+    /* =========================
+   PORTADA CON SOBRE
+========================= */
+
+.invitation-cover {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  background:
+    radial-gradient(circle at top, #f9fbfc 0%, #e8eef2 45%, #d9e3e9 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.invitation-cover.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cover-content {
+  width: 100%;
+  max-width: 700px;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.cover-small {
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #6f8798;
+  margin-bottom: 12px;
+}
+
+.cover-name {
+  font-family: Georgia, serif;
+  font-size: clamp(52px, 10vw, 90px);
+  font-weight: 400;
+  color: #47677c;
+  margin-bottom: 8px;
+}
+
+.cover-message {
+  color: #7b8a94;
+  font-size: 17px;
+  margin-bottom: 45px;
+}
+
+.envelope-wrapper {
+  width: 340px;
+  max-width: 85vw;
+  height: 230px;
+  margin: 0 auto;
+  cursor: pointer;
+  position: relative;
+  perspective: 1200px;
+}
+
+.envelope {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  filter: drop-shadow(0 18px 25px rgba(52, 74, 88, 0.18));
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background: #eef3f5;
+  border-radius: 8px;
+}
+
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.envelope-front::before,
+.envelope-front::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 70%;
+  height: 100%;
+  background: #dde7ec;
+}
+
+.envelope-front::before {
+  left: 0;
+  clip-path: polygon(0 35%, 100% 100%, 0 100%);
+}
+
+.envelope-front::after {
+  right: 0;
+  clip-path: polygon(100% 35%, 0 100%, 100% 100%);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 58%;
+  background: #cfdce3;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  z-index: 6;
+  transition: transform 0.9s ease;
+}
+
+.letter {
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  left: 9%;
+  top: 10%;
+  background: #fffdf8;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform 1s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.letter span {
+  font-family: Georgia, serif;
+  font-size: 56px;
+  color: #6f8798;
+}
+
+.seal {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  background: #6f8798;
+  color: white;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 27px;
+  border: 4px solid rgba(255,255,255,0.45);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.13);
+  transition: opacity 0.25s ease;
+}
+
+.envelope-wrapper.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.envelope-wrapper.open .letter {
+  transform: translateY(-105px);
+  z-index: 5;
+}
+
+.envelope-wrapper.open .seal {
+  opacity: 0;
+}
+
+.open-text {
+  margin-top: 35px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #788d9b;
+}
+
+@media (max-width: 600px) {
+  .cover-message {
+    margin-bottom: 32px;
+  }
+
+  .envelope-wrapper {
+    width: 290px;
+    height: 195px;
+  }
+
+  .letter span {
+    font-size: 46px;
+  }
+}
   </style>
 </head>
 
 <body>
+<!-- PANTALLA DE ENTRADA -->
 
+<div id="invitation-cover" class="invitation-cover">
+
+  <div class="cover-content">
+
+    <p class="cover-small">
+      MI PRIMERA COMUNIÓN
+    </p>
+
+    <h1 class="cover-name">
+      Alejandro
+    </h1>
+
+    <p class="cover-message">
+      Tengo algo muy especial que contarte...
+    </p>
+
+    <div class="envelope-wrapper" onclick="openInvitation()">
+
+      <div class="envelope">
+
+        <div class="envelope-back"></div>
+
+        <div class="letter">
+          <span>A</span>
+        </div>
+
+        <div class="envelope-front"></div>
+
+        <div class="envelope-flap"></div>
+
+        <div class="seal">
+          A
+        </div>
+
+      </div>
+
+    </div>
+
+    <p class="open-text">
+      Pulsa para abrir la invitación
+    </p>
+
+  </div>
+
+</div>
   <section class="hero">
     <div class="hero-content">
       <div class="small-title">Mi Primera Comunión</div>
@@ -501,7 +744,20 @@
     updateCountdown();
 
     setInterval(updateCountdown, 1000);
+function openInvitation() {
+  const wrapper = document.querySelector(".envelope-wrapper");
+  const cover = document.getElementById("invitation-cover");
 
+  wrapper.classList.add("open");
+
+  setTimeout(() => {
+    cover.classList.add("hidden");
+  }, 1500);
+
+  setTimeout(() => {
+    cover.style.display = "none";
+  }, 2400);
+}
     document.querySelector("form").addEventListener("submit", function(e) {
       e.preventDefault();
 
