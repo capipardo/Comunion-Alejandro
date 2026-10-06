@@ -744,6 +744,13 @@
     updateCountdown();
 
     setInterval(updateCountdown, 1000);
+    
+    history.scrollRestoration = "manual";
+
+window.addEventListener("load", function() {
+  window.scrollTo(0, 0);
+  document.body.style.overflow = "hidden";
+});
 function openInvitation() {
   const wrapper = document.querySelector(".envelope-wrapper");
   const cover = document.getElementById("invitation-cover");
@@ -751,11 +758,14 @@ function openInvitation() {
   wrapper.classList.add("open");
 
   setTimeout(() => {
+    window.scrollTo(0, 0);
     cover.classList.add("hidden");
+    document.body.style.overflow = "auto";
   }, 1500);
 
   setTimeout(() => {
     cover.style.display = "none";
+    window.scrollTo(0, 0);
   }, 2400);
 }
     document.querySelector("form").addEventListener("submit", function(e) {
