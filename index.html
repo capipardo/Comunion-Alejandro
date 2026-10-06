@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primera Comunión de Alejandro</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f6f2;
+      color: #2f3a45;
+      line-height: 1.6;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      background:
+        linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.88)),
+        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-content {
+      max-width: 750px;
+    }
+
+    .small-title {
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-size: 14px;
+      color: #7b8c99;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(52px, 10vw, 92px);
+      font-weight: 400;
+      color: #486579;
+      margin-bottom: 10px;
+    }
+
+    .hero h2 {
+      font-family: Georgia, serif;
+      font-weight: 400;
+      font-size: clamp(24px, 4vw, 38px);
+      color: #6c7d86;
+      margin-bottom: 28px;
+    }
+
+    .date {
+      display: inline-block;
+      padding: 12px 24px;
+      border-top: 1px solid #aebdc6;
+      border-bottom: 1px solid #aebdc6;
+      color: #486579;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .scroll {
+      display: inline-block;
+      margin-top: 40px;
+      text-decoration: none;
+      color: #486579;
+      font-size: 14px;
+    }
+
+    section {
+      padding: 85px 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section h2 {
+      font-family: Georgia, serif;
+      font-weight: 400;
+      font-size: 38px;
+      color: #486579;
+      margin-bottom: 25px;
+    }
+
+    section p {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 18px;
+      color: #5f6870;
+    }
+
+    .countdown {
+      background: #e9eef1;
+    }
+
+    .counter {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 700px;
+      margin: 35px auto 0;
+    }
+
+    .counter-box {
+      background: white;
+      padding: 25px 10px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    }
+
+    .counter-box span {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 40px;
+      color: #486579;
+    }
+
+    .counter-box small {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #84929b;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 28px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+    }
+
+    .card h3 {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #486579;
+      margin-bottom: 14px;
+    }
+
+    .card p {
+      font-size: 16px;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 13px 24px;
+      border-radius: 50px;
+      background: #486579;
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .button:hover {
+      background: #334b5c;
+    }
+
+    .photo-section {
+      background: #f1eee8;
+    }
+
+    .photo-placeholder {
+      max-width: 600px;
+      height: 420px;
+      margin: 35px auto 0;
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(72,101,121,0.08), rgba(72,101,121,0.08)),
+        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .rsvp {
+      background: #dde6eb;
+    }
+
+    form {
+      max-width: 650px;
+      margin: 35px auto 0;
+      display: grid;
+      gap: 15px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #c4d0d7;
+      border-radius: 12px;
+      background: white;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      padding: 15px 26px;
+      border-radius: 50px;
+      background: #486579;
+      color: white;
+      font-size: 16px;
+    }
+
+    footer {
+      background: #486579;
+      color: white;
+      text-align: center;
+      padding: 45px 20px;
+    }
+
+    footer h2 {
+      font-family: Georgia, serif;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .counter {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 65px 18px;
+      }
+
+      .photo-placeholder {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="small-title">Mi Primera Comunión</div>
+
+      <h1>Alejandro</h1>
+
+      <h2>Un día muy especial</h2>
+
+      <div class="date">
+        00 · 00 · 2027
+      </div>
+
+      <br>
+
+      <a href="#bienvenida" class="scroll">
+        Descubre todos los detalles ↓
+      </a>
+    </div>
+  </section>
+
+  <section id="bienvenida">
+    <div class="container">
+      <h2>¡Estás invitado!</h2>
+
+      <p>
+        Alejandro celebra un día muy especial y nos encantaría compartirlo contigo.
+        Hemos preparado esta pequeña invitación para que tengas toda la información
+        de la celebración.
+      </p>
+    </div>
+  </section>
+
+  <section class="countdown">
+    <div class="container">
+      <h2>Cuenta atrás</h2>
+
+      <p>
+        Cada vez falta menos para celebrar juntos este día.
+      </p>
+
+      <div class="counter">
+        <div class="counter-box">
+          <span id="days">00</span>
+          <small>Días</small>
+        </div>
+
+        <div class="counter-box">
+          <span id="hours">00</span>
+          <small>Horas</small>
+        </div>
+
+        <div class="counter-box">
+          <span id="minutes">00</span>
+          <small>Minutos</small>
+        </div>
+
+        <div class="counter-box">
+          <span id="seconds">00</span>
+          <small>Segundos</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>La celebración</h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Ceremonia</h3>
+
+          <p>
+            Parroquia por definir
+          </p>
+
+          <p>
+            12:00 h
+          </p>
+
+          <a href="#" class="button">
+            Cómo llegar
+          </a>
+        </div>
+
+        <div class="card">
+          <h3>Celebración</h3>
+
+          <p>
+            Lugar de celebración por definir
+          </p>
+
+          <p>
+            14:00 h
+          </p>
+
+          <a href="#" class="button">
+            Cómo llegar
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="photo-section">
+    <div class="container">
+      <h2>Un recuerdo para siempre</h2>
+
+      <p>
+        Queremos que este día quede guardado para siempre entre nuestros mejores recuerdos.
+      </p>
+
+      <div class="photo-placeholder"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Información importante</h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Horario</h3>
+
+          <p>
+            Próximamente añadiremos todos los horarios del día.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Alergias e intolerancias</h3>
+
+          <p>
+            Puedes indicarnos cualquier alergia o necesidad alimentaria al confirmar tu asistencia.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="rsvp">
+    <div class="container">
+      <h2>Confirma tu asistencia</h2>
+
+      <p>
+        Nos ayudará mucho saber si podrás acompañarnos.
+      </p>
+
+      <form>
+        <input type="text" placeholder="Nombre y apellidos" required>
+
+        <select required>
+          <option value="">¿Asistirás?</option>
+          <option>Sí, allí estaré</option>
+          <option>No podré asistir</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Número de asistentes"
+          min="1"
+        >
+
+        <textarea
+          placeholder="Alergias, intolerancias o algún mensaje para Alejandro"
+        ></textarea>
+
+        <button type="submit">
+          Enviar confirmación
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <h2>Alejandro</h2>
+
+    <p>
+      Gracias por formar parte de este día tan especial.
+    </p>
+  </footer>
+
+  <script>
+    /*
+      FECHA PROVISIONAL.
+      Más adelante pondremos la fecha real de la comunión.
+    */
+
+    const eventDate = new Date("2027-05-15T12:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+      const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) /
+        (1000 * 60 * 60)
+      );
+
+      const minutes = Math.floor(
+        (distance % (1000 * 60 * 60)) /
+        (1000 * 60)
+      );
+
+      const seconds = Math.floor(
+        (distance % (1000 * 60)) / 1000
+      );
+
+      document.getElementById("days").textContent =
+        days >= 0 ? days : "00";
+
+      document.getElementById("hours").textContent =
+        hours >= 0 ? hours : "00";
+
+      document.getElementById("minutes").textContent =
+        minutes >= 0 ? minutes : "00";
+
+      document.getElementById("seconds").textContent =
+        seconds >= 0 ? seconds : "00";
+    }
+
+    updateCountdown();
+
+    setInterval(updateCountdown, 1000);
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      alert(
+        "Formulario de demostración. Más adelante lo conectaremos con Supabase."
+      );
+    });
+  </script>
+
+</body>
+</html>
