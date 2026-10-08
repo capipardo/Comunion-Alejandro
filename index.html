@@ -288,36 +288,19 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(183, 202, 214, 0.34), transparent 28%),
-    radial-gradient(circle at 85% 75%, rgba(220, 203, 170, 0.22), transparent 25%),
-    linear-gradient(135deg, #f7f3eb 0%, #eef3f5 48%, #f7f3eb 100%);
+ background:
+  linear-gradient(
+    rgba(35, 46, 50, 0.08),
+    rgba(35, 46, 50, 0.16)
+  ),
+  url("fondo comunion.jpg");
+
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
   transition: opacity 0.9s ease, visibility 0.9s ease;
 }
 
-.invitation-cover::before,
-.invitation-cover::after {
-  content: "";
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  border-radius: 50%;
-  filter: blur(8px);
-  opacity: 0.22;
-  pointer-events: none;
-}
-
-.invitation-cover::before {
-  top: -110px;
-  left: -100px;
-  background: #a7becd;
-}
-
-.invitation-cover::after {
-  right: -100px;
-  bottom: -120px;
-  background: #d8c7a5;
-}
 
 .invitation-cover.hidden {
   opacity: 0;
