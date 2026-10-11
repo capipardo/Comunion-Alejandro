@@ -29,66 +29,103 @@
       line-height: 1.6;
     }
 
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 20px;
-      background:
-        linear-gradient(rgba(245, 241, 232, 0.28), rgba(245, 241, 232, 0.38)),
-        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80');
-    background-size: cover;
-background-position: center;
-    
-    }
+  .hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f5f1e8;
+}
+    .hero::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
 
-    .hero-content {
-      max-width: 750px;
-    }
+  background-image: url("primera-pagina-comunion.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-    .small-title {
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      font-size: 14px;
-      color: #7b8c99;
-      margin-bottom: 16px;
-    }
+  filter: blur(6px);
+  transform: scale(1.05);
+  opacity: 0.82;
 
-    h1 {
-      font-family: Georgia, serif;
-      font-size: clamp(52px, 10vw, 92px);
-      font-weight: 400;
-      color: #486579;
-      margin-bottom: 10px;
-    }
+  z-index: -2;
+  pointer-events: none;
+}
 
-    .hero h2 {
-      font-family: Georgia, serif;
-      font-weight: 400;
-      font-size: clamp(24px, 4vw, 38px);
-      color: #6c7d86;
-      margin-bottom: 28px;
-    }
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(248, 244, 235, 0.34);
+  z-index: -1;
+  pointer-events: none;
+}
 
-    .date {
-      display: inline-block;
-      padding: 12px 24px;
-      border-top: 1px solid #aebdc6;
-      border-bottom: 1px solid #aebdc6;
-      color: #486579;
-      font-size: 18px;
-      letter-spacing: 2px;
-    }
+   .hero-content {
+  max-width: 760px;
+  width: 100%;
+  padding: 42px 30px;
+  border-radius: 28px;
+  background: rgba(255, 253, 248, 0.46);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(143, 126, 94, 0.20);
+  box-shadow: 0 18px 40px rgba(73, 60, 42, 0.14);
+}
+
+   .small-title {
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #5a7488;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+   .hero h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(48px, 7vw, 88px);
+  color: #2f5872;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(255,255,255,0.55);
+}
+
+  .hero h2 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(26px, 4vw, 38px);
+  color: #7a5a2f;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(255,255,255,0.45);
+}
+
+   .date {
+  display: inline-block;
+  padding: 12px 22px;
+  border-top: 1px solid #cbb48a;
+  border-bottom: 1px solid #cbb48a;
+  color: #6d5432;
+  font-size: 15px;
+  letter-spacing: 3px;
+  margin-bottom: 26px;
+  background: rgba(255,255,255,0.34);
+  border-radius: 999px;
+}
 
     .scroll {
-      display: inline-block;
-      margin-top: 40px;
-      text-decoration: none;
-      color: #486579;
-      font-size: 14px;
-    }
+  display: inline-block;
+  margin-top: 28px;
+  text-decoration: none;
+  color: #456782;
+  font-size: 15px;
+  font-weight: 600;
+}
 
     section {
       padding: 85px 20px;
@@ -193,18 +230,22 @@ background-position: center;
       background: #f1eee8;
     }
 
-    .photo-placeholder {
-      max-width: 600px;
-      height: 420px;
-      margin: 35px auto 0;
-      border-radius: 24px;
-      background:
-        linear-gradient(rgba(72,101,121,0.08), rgba(72,101,121,0.08)),
-        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80');
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
+  .photo-placeholder {
+  max-width: 600px;
+  height: 420px;
+  margin: 35px auto 0;
+  border-radius: 24px;
+
+  background: linear-gradient(
+    135deg,
+    #eef3f4,
+    #e7dfd2
+  );
+
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
 
     .rsvp {
       background: #dde6eb;
@@ -273,7 +314,23 @@ background-position: center;
         height: 320px;
       }
     }
+.hero-content {
+  padding: 30px 20px;
+  border-radius: 22px;
+}
 
+.hero h1 {
+  font-size: 54px;
+}
+
+.hero h2 {
+  font-size: 26px;
+}
+
+.date {
+  font-size: 13px;
+  padding: 10px 16px;
+}
 
 /* =========================
    PORTADA PREMIUM COMUNIÓN
