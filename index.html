@@ -186,7 +186,48 @@ z-index: 2;
       letter-spacing: 1px;
       color: #84929b;
     }
+.event-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f1e8;
+}
 
+.event-section::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+
+  background-image: url("fondo-celebracion.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  filter: blur(6px);
+  transform: scale(1.05);
+  opacity: 0.82;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+.event-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(248, 244, 235, 0.32);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.event-section .container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
     .cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -194,12 +235,14 @@ z-index: 2;
       margin-top: 40px;
     }
 
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 40px 28px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-    }
+   .card {
+  background: rgba(255, 253, 248, 0.88);
+  backdrop-filter: blur(7px);
+  border-radius: 20px;
+  padding: 40px 28px;
+  box-shadow: 0 12px 30px rgba(65, 56, 45, 0.16);
+  border: 1px solid rgba(180, 157, 112, 0.20);
+}
 
     .card h3 {
       font-family: Georgia, serif;
@@ -959,7 +1002,7 @@ z-index: 2;
     </div>
   </section>
 
-  <section>
+  <section class="event-section">
     <div class="container">
       <h2>La celebración</h2>
 
