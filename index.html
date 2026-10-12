@@ -276,8 +276,9 @@ z-index: 2;
     }
 
  .photo-placeholder {
-  max-width: 600px;
-  height: 420px;
+  max-width: none;
+  width: min(1100px, 92vw);
+  height: min(680px, 62vw);
   margin: 35px auto 0;
   border-radius: 24px;
 
@@ -394,9 +395,11 @@ z-index: 2;
         padding: 65px 18px;
       }
 
-      .photo-placeholder {
-        height: 320px;
-      }
+    .photo-placeholder {
+  width: 94vw;
+  height: 62vw;
+  min-height: 260px;
+}
     }
 .hero-content {
   padding: 30px 20px;
