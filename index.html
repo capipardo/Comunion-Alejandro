@@ -275,22 +275,61 @@ z-index: 2;
       background: #f1eee8;
     }
 
-  .photo-placeholder {
+ .photo-placeholder {
   max-width: 600px;
   height: 420px;
   margin: 35px auto 0;
   border-radius: 24px;
 
-  background: linear-gradient(
-    135deg,
-    #eef3f4,
-    #e7dfd2
-  );
-
+  background-image: url("3.png");
   background-size: cover;
   background-position: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  background-repeat: no-repeat;
+
+  border: 1px solid rgba(180, 157, 112, 0.22);
+  box-shadow: 0 14px 34px rgba(55, 48, 39, 0.18);
 }
+.memory-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  background: #f5f1e8;
+}
+
+.memory-section::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+
+  background-image: url("imagen Celebracion.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  filter: blur(7px);
+  transform: scale(1.05);
+  opacity: 0.78;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+.memory-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(248, 244, 235, 0.38);
+
+  z-index: 1;
+  pointer-events: none;
+}
+
+.memory-section .container {
+  position: relative;
+  z-index: 2;
+}
+ 
 
     .rsvp {
       background: #dde6eb;
@@ -1072,7 +1111,7 @@ z-index: 2;
     </div>
   </section>
 
-  <section class="photo-section">
+ <section class="photo-section memory-section">
     <div class="container">
       <h2>Un recuerdo para siempre</h2>
 
