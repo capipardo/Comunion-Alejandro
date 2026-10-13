@@ -925,12 +925,51 @@ display: block;
     font-size: 25px;
   }
 }
+    .sound-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(69, 103, 130, 0.92);
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  z-index: 10000;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.sound-toggle:hover {
+  transform: scale(1.08);
+  background: rgba(55, 87, 112, 0.96);
+}
+
+.sound-toggle.show {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  .sound-toggle {
+    right: 14px;
+    bottom: 14px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
 </style>
 </head>
 <body>
   <audio id="background-music" loop preload="auto">
   <source src="musica-comunion.mp3.mp3" type="audio/mpeg">
 </audio>
+  <button id="sound-toggle" class="sound-toggle" onclick="toggleSound()">🔊</button>
 <!-- PANTALLA DE ENTRADA -->
 
 <div id="invitation-cover" class="invitation-cover">
@@ -1336,13 +1375,15 @@ window.addEventListener("load", function() {
 });
 function openInvitation() {
   const music = document.getElementById("background-music");
-
+const soundButton = document.getElementById("sound-toggle");
 if (music.paused) {
   music.volume = 0.30;
   music.play().catch(() => {
     console.log("El navegador no permitió iniciar el audio.");
   });
 }
+  soundButton.classList.add("show");
+soundButton.textContent = "🔊";
   const wrapper = document.querySelector(".envelope-wrapper");
   const cover = document.getElementById("invitation-cover");
 
@@ -1366,6 +1407,24 @@ if (music.paused) {
         "Formulario de demostración. Más adelante lo conectaremos con Supabase."
       );
     });
+    function toggleSound() {
+  const music = document.getElementById("background-music");
+  const button = document.getElementById("sound-toggle");
+
+  if (music.muted || music.paused) {
+    music.muted = false;
+    music.volume = 0.30;
+
+    music.play().catch(() => {
+      console.log("No se pudo reproducir el audio.");
+    });
+
+    button.textContent = "🔊";
+  } else {
+    music.muted = true;
+    button.textContent = "🔇";
+  }
+}
   </script>
 
 </body>
