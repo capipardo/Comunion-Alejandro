@@ -928,6 +928,9 @@ display: block;
 </style>
 </head>
 <body>
+  <audio id="background-music" loop preload="auto">
+  <source src="musica-comunion.mp3.mp3" type="audio/mpeg">
+</audio>
 <!-- PANTALLA DE ENTRADA -->
 
 <div id="invitation-cover" class="invitation-cover">
@@ -1332,6 +1335,14 @@ window.addEventListener("load", function() {
   document.body.style.overflow = "hidden";
 });
 function openInvitation() {
+  const music = document.getElementById("background-music");
+
+if (music.paused) {
+  music.volume = 0.30;
+  music.play().catch(() => {
+    console.log("El navegador no permitió iniciar el audio.");
+  });
+}
   const wrapper = document.querySelector(".envelope-wrapper");
   const cover = document.getElementById("invitation-cover");
 
