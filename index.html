@@ -1168,24 +1168,102 @@ display: block;
         Nos ayudará mucho saber si podrás acompañarnos.
       </p>
 
-      <form>
-        <input type="text" placeholder="Nombre y apellidos" required>
+    <form class="rsvp-form">
 
-        <select required>
-          <option value="">¿Asistirás?</option>
-          <option>Sí, allí estaré</option>
-          <option>No podré asistir</option>
-        </select>
+  <div class="form-group">
+    <label>NOMBRE</label>
+    <input type="text" name="nombre" placeholder="Tu nombre" required>
+  </div>
 
-        <input
-          type="number"
-          placeholder="Número de asistentes"
-          min="1"
-        >
+  <div class="form-group">
+    <label>APELLIDOS</label>
+    <input type="text" name="apellidos" placeholder="Tus apellidos" required>
+  </div>
 
-        <textarea
-          placeholder="Alergias, intolerancias o algún mensaje para Alejandro"
-        ></textarea>
+  <div class="form-group">
+    <label>TELÉFONO</label>
+    <input type="tel" name="telefono" placeholder="600 000 000">
+  </div>
+
+  <div class="form-group">
+    <label>EMAIL</label>
+    <input type="email" name="email" placeholder="tu@email.com">
+  </div>
+
+  <div class="form-group">
+    <label>¿ASISTIRÁS?</label>
+
+    <div class="option-row">
+      <label class="option-button">
+        <input type="radio" name="asistencia" value="si" required>
+        <span>¡Sí, allí estaré! 🎉</span>
+      </label>
+
+      <label class="option-button">
+        <input type="radio" name="asistencia" value="no">
+        <span>No podré ir 😢</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>NÚMERO DE ASISTENTES</label>
+    <input type="number" name="asistentes" min="1" placeholder="Número de asistentes">
+  </div>
+
+  <div class="form-group">
+    <label>ALERGIAS / INTOLERANCIAS</label>
+    <textarea
+      name="alergias"
+      placeholder="Déjalo en blanco si no tienes"
+    ></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>¿NECESITAS TRANSPORTE?</label>
+
+    <div class="option-row">
+      <label class="option-button">
+        <input type="radio" name="transporte" value="si">
+        <span>Sí 🚌</span>
+      </label>
+
+      <label class="option-button">
+        <input type="radio" name="transporte" value="no">
+        <span>No</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>ACOMPAÑANTES QUE VIENEN CONTIGO</label>
+    <input
+      type="text"
+      name="acompanantes"
+      placeholder="Nombre de los acompañantes"
+    >
+  </div>
+
+  <div class="form-group">
+    <label>MENSAJE PARA ALEJANDRO</label>
+    <textarea
+      name="mensaje"
+      placeholder="Escribe aquí tu mensaje"
+    ></textarea>
+  </div>
+
+  <label class="privacy-check">
+    <input type="checkbox" required>
+    <span>
+      Acepto que mis datos se usen únicamente para organizar este evento.
+    </span>
+  </label>
+
+  <button type="submit" class="confirm-button">
+    Confirmar asistencia
+  </button>
+
+</form>
 
         <button type="submit">
           Enviar confirmación
