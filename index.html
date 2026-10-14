@@ -1115,6 +1115,19 @@ display: block;
   }
 
 }
+    .upload-status {
+  margin-top: 16px;
+  min-height: 20px;
+  font-size: 13px;
+  color: #56758a;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.upload-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
 </style>
 </head>
 <body>
@@ -1504,7 +1517,15 @@ display: block;
       <button type="button" class="upload-button" id="uploadPhotosButton">
         Subir fotos
       </button>
+<input
+  type="file"
+  id="photoInput"
+  accept="image/jpeg,image/png,image/webp"
+  multiple
+  hidden
+>
 
+<p id="uploadStatus" class="upload-status"></p>
       <p class="upload-note">
         Próximamente conectaremos este espacio con la galería del evento.
       </p>
@@ -1558,7 +1579,8 @@ display: block;
       Gracias por formar parte de este día tan especial.
     </p>
   </footer>
-
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     /*
       FECHA PROVISIONAL.
@@ -1662,6 +1684,124 @@ soundButton.textContent = "🔊";
     button.textContent = "🔇";
   }
 }
+    const SUPABASE_URL = "https://txqqzyguzhvtfdmyzkfj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_msKobPJLUTjtLZx8ut9Cxg_894X6lxk";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const uploadPhotosButton =
+  document.getElementById("uploadPhotosButton");
+
+const photoInput =
+  document.getElementById("photoInput");
+
+const uploadStatus =
+  document.getElementById("uploadStatus");
+
+
+uploadPhotosButton.addEventListener("click", () => {
+  photoInput.click();
+});
+
+
+photoInput.addEventListener("change", async () => {
+
+  const files = Array.from(photoInput.files);
+
+  if (!files.length) {
+    return;
+  }
+
+  if (files.length > 10) {
+    uploadStatus.textContent =
+      "Puedes subir un máximo de 10 fotos cada vez.";
+    photoInput.value = "";
+    return;
+  }
+
+  for (const file of files) {
+    if (file.size > 5 * 1024 * 1024) {
+      uploadStatus.textContent =
+        `${file.name} supera el límite de 5 MB.`;
+      photoInput.value = "";
+      return;
+    }
+  }
+
+  uploadPhotosButton.disabled = true;
+  uploadPhotosButton.textContent = "Subiendo...";
+
+  uploadStatus.textContent =
+    `Subiendo ${files.length} foto${files.length > 1 ? "s" : ""}...`;
+
+  let uploaded = 0;
+
+  try {
+
+    for (const file of files) {
+
+      const extension =
+        file.name.split(".").pop().toLowerCase();
+
+      const safeName =
+        `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+      const storagePath =
+        `invitados/${safeName}`;
+
+      const { error: uploadError } =
+        await supabaseClient.storage
+          .from("recuerdos")
+          .upload(storagePath, file, {
+            cacheControl: "3600",
+            upsert: false
+          });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { error: dbError } =
+        await supabaseClient
+          .from("fotos")
+          .insert({
+            nombre_archivo: file.name,
+            ruta_storage: storagePath
+          });
+
+      if (dbError) {
+        throw dbError;
+      }
+
+      uploaded++;
+
+      uploadStatus.textContent =
+        `${uploaded} de ${files.length} fotos subidas...`;
+    }
+
+    uploadStatus.textContent =
+      "¡Fotos subidas correctamente! Gracias por compartir este recuerdo.";
+
+    photoInput.value = "";
+
+  } catch (error) {
+
+    console.error(error);
+
+    uploadStatus.textContent =
+      "No se pudieron subir las fotos. Inténtalo de nuevo.";
+
+  } finally {
+
+    uploadPhotosButton.disabled = false;
+    uploadPhotosButton.textContent = "Subir fotos";
+
+  }
+
+});
   </script>
 
 </body>
