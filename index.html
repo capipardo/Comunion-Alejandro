@@ -1130,6 +1130,20 @@ text-decoration: none;
   opacity: 0.65;
   cursor: wait;
 }
+    .rsvp-status {
+  min-height: 22px;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #56758a;
+  line-height: 1.5;
+}
+
+.confirm-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
 </style>
 </head>
 <body>
@@ -1801,6 +1815,129 @@ photoInput.addEventListener("change", async () => {
   }
 
 });
+    // ==========================================
+// CONFIRMACIÓN DE ASISTENCIA
+// ==========================================
+
+const rsvpForm =
+  document.getElementById("rsvpForm");
+
+const confirmAttendanceButton =
+  document.getElementById("confirmAttendanceButton");
+
+const rsvpStatus =
+  document.getElementById("rsvpStatus");
+
+
+rsvpForm.addEventListener("submit", async (event) => {
+
+  event.preventDefault();
+
+  rsvpStatus.textContent = "";
+
+  const formData =
+    new FormData(rsvpForm);
+
+
+  const nombre =
+    formData.get("nombre")?.trim();
+
+  const apellidos =
+    formData.get("apellidos")?.trim();
+
+  const telefono =
+    formData.get("telefono")?.trim() || null;
+
+  const email =
+    formData.get("email")?.trim() || null;
+
+  const asistencia =
+    formData.get("asistencia");
+
+  const asistentesValue =
+    formData.get("asistentes");
+
+  const asistentes =
+    asistencia === "si"
+      ? Number(asistentesValue) || 1
+      : 0;
+
+  const alergias =
+    formData.get("alergias")?.trim() || null;
+
+  const transporte =
+    formData.get("transporte") || null;
+
+  const acompanantes =
+    formData.get("acompanantes")?.trim() || null;
+
+  const mensaje =
+    formData.get("mensaje")?.trim() || null;
+
+
+  if (!asistencia) {
+
+    rsvpStatus.textContent =
+      "Indica si podrás asistir.";
+
+    return;
+  }
+
+
+  confirmAttendanceButton.disabled = true;
+
+  confirmAttendanceButton.textContent =
+    "Enviando confirmación...";
+
+
+  const { error } =
+    await supabaseClient
+      .from("invitados")
+      .insert({
+        nombre,
+        apellidos,
+        telefono,
+        email,
+        asistencia,
+        asistentes,
+        alergias,
+        transporte,
+        acompanantes,
+        mensaje
+      });
+
+
+  if (error) {
+
+    console.error(
+      "Error enviando confirmación:",
+      error
+    );
+
+    rsvpStatus.textContent =
+      "No se pudo enviar la confirmación. Inténtalo de nuevo.";
+
+    confirmAttendanceButton.disabled = false;
+
+    confirmAttendanceButton.textContent =
+      "Confirmar asistencia";
+
+    return;
+  }
+
+
+  rsvpStatus.textContent =
+    "¡Confirmación enviada correctamente! Muchas gracias.";
+
+  rsvpForm.reset();
+
+  confirmAttendanceButton.disabled = false;
+
+  confirmAttendanceButton.textContent =
+    "Confirmar asistencia";
+
+});
+    
   </script>
 
 </body>
