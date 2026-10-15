@@ -1377,7 +1377,7 @@ text-decoration: none;
         Nos ayudará mucho saber si podrás acompañarnos.
       </p>
 
-    <form class="rsvp-form">
+   <form class="rsvp-form" id="rsvpForm">
 
   <div class="form-group">
     <label>NOMBRE</label>
@@ -1467,17 +1467,14 @@ text-decoration: none;
       Acepto que mis datos se usen únicamente para organizar este evento.
     </span>
   </label>
-
-  <button type="submit" class="confirm-button">
-    Confirmar asistencia
-  </button>
-
+<button type="submit" class="confirm-button" id="confirmAttendanceButton">
+  Confirmar asistencia
+</button>
+    
+<p id="rsvpStatus" class="rsvp-status"></p>
 </form>
 
-        <button type="submit">
-          Enviar confirmación
-        </button>
-      </form>
+       
     </div>
   </section>
 <!-- =========================
