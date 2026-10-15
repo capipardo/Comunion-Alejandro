@@ -1130,14 +1130,21 @@ text-decoration: none;
   opacity: 0.65;
   cursor: wait;
 }
-    .rsvp-status {
+   .rsvp-status {
   min-height: 22px;
   margin-top: 16px;
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  color: #56758a;
   line-height: 1.5;
+}
+
+.rsvp-status.success {
+  color: #2f7d32;
+}
+
+.rsvp-status.error {
+  color: #a84f46;
 }
 
 .confirm-button:disabled {
@@ -1868,7 +1875,8 @@ rsvpForm.addEventListener("submit", async (event) => {
   const mensaje =
     formData.get("mensaje")?.trim() || null;
 
-
+rsvpStatus.classList.remove("success");
+rsvpStatus.classList.add("error");
   if (!asistencia) {
 
     rsvpStatus.textContent =
@@ -1907,7 +1915,8 @@ rsvpForm.addEventListener("submit", async (event) => {
       "Error enviando confirmación:",
       error
     );
-
+rsvpStatus.classList.remove("success");
+rsvpStatus.classList.add("error");
     rsvpStatus.textContent =
       "No se pudo enviar la confirmación. Inténtalo de nuevo.";
 
@@ -1919,7 +1928,8 @@ rsvpForm.addEventListener("submit", async (event) => {
     return;
   }
 
-
+rsvpStatus.classList.remove("error");
+rsvpStatus.classList.add("success");
   rsvpStatus.textContent =
     "¡Confirmación enviada correctamente! Muchas gracias.";
 
