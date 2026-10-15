@@ -286,6 +286,84 @@
 .photo-button:hover {
   opacity: 0.88;
 }
+    .guest-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.guest-search {
+  flex: 1;
+  min-width: 220px;
+
+  padding: 11px 14px;
+
+  border: 1px solid #d9cebc;
+  border-radius: 10px;
+
+  background: #faf8f4;
+
+  font-size: 14px;
+  color: #44515a;
+
+  outline: none;
+}
+
+.guest-search:focus {
+  border-color: #6f8ea3;
+}
+
+.guest-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-button,
+.export-button {
+  padding: 9px 14px;
+
+  border: 1px solid #9c855f;
+  border-radius: 999px;
+
+  background: transparent;
+  color: #705d3e;
+
+  font-size: 12px;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.filter-button:hover,
+.export-button:hover {
+  background: #315d78;
+  border-color: #315d78;
+  color: white;
+}
+
+.filter-button.active {
+  background: #315d78;
+  border-color: #315d78;
+  color: white;
+}
+
+@media (max-width: 700px) {
+  .guest-tools {
+    align-items: stretch;
+  }
+
+  .guest-search {
+    width: 100%;
+  }
+
+  .guest-filters {
+    width: 100%;
+  }
+}
   </style>
 
 </head>
@@ -400,14 +478,79 @@
 
      <section class="panel-section">
 
-  <div class="section-header">
-    <div>
-      <h3>Invitados</h3>
-      <p>
-        Confirmaciones, alergias, transporte y mensajes.
-      </p>
-    </div>
+ <div class="section-header">
+
+  <div>
+    <h3>Invitados</h3>
+    <p>
+      Confirmaciones, alergias, transporte y mensajes.
+    </p>
   </div>
+
+  <button
+    type="button"
+    id="exportGuestsButton"
+    class="export-button"
+  >
+    Exportar CSV
+  </button>
+
+</div>
+
+<div class="guest-tools">
+
+  <input
+    type="search"
+    id="guestSearch"
+    placeholder="Buscar invitado..."
+    class="guest-search"
+  >
+
+  <div class="guest-filters">
+
+    <button
+      type="button"
+      class="filter-button active"
+      data-filter="all"
+    >
+      Todos
+    </button>
+
+    <button
+      type="button"
+      class="filter-button"
+      data-filter="yes"
+    >
+      Asisten
+    </button>
+
+    <button
+      type="button"
+      class="filter-button"
+      data-filter="no"
+    >
+      No asisten
+    </button>
+
+    <button
+      type="button"
+      class="filter-button"
+      data-filter="allergies"
+    >
+      Alergias
+    </button>
+
+    <button
+      type="button"
+      class="filter-button"
+      data-filter="transport"
+    >
+      Transporte
+    </button>
+
+  </div>
+
+</div>
 
   <div class="table-wrapper">
 
@@ -528,51 +671,8 @@ async function loadGuests() {
     return;
   }
 
-  tableBody.innerHTML = invitados.map(invitado => {
-
-    const asistencia =
-      invitado.asistencia === "si"
-        ? `<span class="status-yes">Sí</span>`
-        : `<span class="status-no">No</span>`;
-
-    return `
-      <tr>
-
-        <td>
-          <strong>
-            ${invitado.nombre || ""}
-            ${invitado.apellidos || ""}
-          </strong>
-          <br>
-          <small>
-            ${invitado.telefono || ""}
-          </small>
-        </td>
-
-        <td>
-          ${asistencia}
-        </td>
-
-        <td>
-          ${invitado.asistentes ?? "-"}
-        </td>
-
-        <td>
-          ${invitado.alergias || "-"}
-        </td>
-
-        <td>
-          ${invitado.transporte || "-"}
-        </td>
-
-        <td>
-          ${invitado.mensaje || "-"}
-        </td>
-
-      </tr>
-    `;
-
-  }).join("");
+ guestsData = invitados;
+applyGuestFilters();
 
 }
 async function loadStats() {
@@ -823,6 +923,232 @@ deleteButton.addEventListener(
   }
 
 }
+    let guestsData = [];
+let activeGuestFilter = "all";
+
+function renderGuests(invitados) {
+
+  const tableBody =
+    document.getElementById("guestsTableBody");
+
+  if (!invitados.length) {
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-row">
+          No hay invitados que coincidan.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tableBody.innerHTML = invitados.map(invitado => {
+
+    const asistencia =
+      invitado.asistencia === "si"
+        ? `<span class="status-yes">Sí</span>`
+        : `<span class="status-no">No</span>`;
+
+    return `
+      <tr>
+
+        <td>
+          <strong>
+            ${invitado.nombre || ""}
+            ${invitado.apellidos || ""}
+          </strong>
+          <br>
+          <small>
+            ${invitado.telefono || ""}
+          </small>
+        </td>
+
+        <td>${asistencia}</td>
+
+        <td>
+          ${invitado.asistentes ?? "-"}
+        </td>
+
+        <td>
+          ${invitado.alergias || "-"}
+        </td>
+
+        <td>
+          ${invitado.transporte || "-"}
+        </td>
+
+        <td>
+          ${invitado.mensaje || "-"}
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+}
+
+
+function applyGuestFilters() {
+
+  const search =
+    document
+      .getElementById("guestSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+  let filtered = guestsData.filter(invitado => {
+
+    const fullName =
+      `${invitado.nombre || ""} ${invitado.apellidos || ""}`
+        .toLowerCase();
+
+    const matchesSearch =
+      fullName.includes(search);
+
+    let matchesFilter = true;
+
+    if (activeGuestFilter === "yes") {
+      matchesFilter =
+        invitado.asistencia === "si";
+    }
+
+    if (activeGuestFilter === "no") {
+      matchesFilter =
+        invitado.asistencia === "no";
+    }
+
+    if (activeGuestFilter === "allergies") {
+      matchesFilter =
+        !!invitado.alergias &&
+        invitado.alergias.trim() !== "" &&
+        invitado.alergias.toLowerCase() !== "ninguna";
+    }
+
+    if (activeGuestFilter === "transport") {
+      matchesFilter =
+        invitado.transporte === "si";
+    }
+
+    return matchesSearch && matchesFilter;
+
+  });
+
+  renderGuests(filtered);
+}
+    const guestSearch =
+  document.getElementById("guestSearch");
+
+guestSearch.addEventListener(
+  "input",
+  applyGuestFilters
+);
+
+
+document
+  .querySelectorAll(".filter-button")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".filter-button")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        activeGuestFilter =
+          button.dataset.filter;
+
+        applyGuestFilters();
+
+      }
+    );
+
+  });-
+  document
+  .getElementById("exportGuestsButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      if (!guestsData.length) {
+        alert("No hay invitados para exportar.");
+        return;
+      }
+
+      const headers = [
+        "Nombre",
+        "Apellidos",
+        "Telefono",
+        "Email",
+        "Asistencia",
+        "Asistentes",
+        "Alergias",
+        "Transporte",
+        "Acompanantes",
+        "Mensaje"
+      ];
+
+      const rows = guestsData.map(invitado => [
+        invitado.nombre || "",
+        invitado.apellidos || "",
+        invitado.telefono || "",
+        invitado.email || "",
+        invitado.asistencia || "",
+        invitado.asistentes ?? "",
+        invitado.alergias || "",
+        invitado.transporte || "",
+        invitado.acompanantes || "",
+        invitado.mensaje || ""
+      ]);
+
+      const csvContent =
+        [
+          headers,
+          ...rows
+        ]
+        .map(row =>
+          row
+            .map(value =>
+              `"${String(value).replace(/"/g, '""')}"`
+            )
+            .join(";")
+        )
+        .join("\n");
+
+      const blob =
+        new Blob(
+          ["\uFEFF" + csvContent],
+          {
+            type: "text/csv;charset=utf-8;"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const link =
+        document.createElement("a");
+
+      link.href = url;
+      link.download =
+        "invitados-comunion-alejandro.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+
+    }
+  );
     async function protectPanel() {
 
       const {
