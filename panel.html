@@ -206,6 +206,51 @@
   color: #a45b52;
   font-weight: 600;
 }
+    .photos-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.photo-card {
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f7f3eb;
+  border: 1px solid rgba(180,157,112,0.20);
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.photo-info {
+  padding: 12px;
+  font-size: 12px;
+  color: #6f6a63;
+}
+
+.empty-photos {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #999;
+  padding: 30px;
+}
+
+@media (max-width: 800px) {
+  .photos-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .photos-gallery {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 
 </head>
@@ -360,18 +405,24 @@
 
 </section>
 
+<section class="panel-section">
 
-      <section class="panel-section">
+  <div class="section-header">
+    <div>
+      <h3>Recuerdos</h3>
+      <p>Fotografías recibidas de los invitados.</p>
+    </div>
+  </div>
 
-        <h3>
-          Recuerdos
-        </h3>
+  <div id="photosGallery" class="photos-gallery">
 
-        <p>
-          Aquí mostraremos las fotografías recibidas.
-        </p>
+    <p class="empty-photos">
+      Cargando fotografías...
+    </p>
 
-      </section>
+  </div>
+
+</section>
 
     </main>
 
@@ -570,6 +621,82 @@ async function loadStats() {
   ).textContent = totalFotos || 0;
 
 }
+    async function loadPhotos() {
+
+  const gallery =
+    document.getElementById("photosGallery");
+
+  const { data: fotos, error } =
+    await supabaseClient
+      .from("fotos")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error cargando fotos:", error);
+
+    gallery.innerHTML = `
+      <p class="empty-photos">
+        No se pudieron cargar las fotografías.
+      </p>
+    `;
+
+    return;
+  }
+
+  if (!fotos.length) {
+
+    gallery.innerHTML = `
+      <p class="empty-photos">
+        Todavía no hay fotografías.
+      </p>
+    `;
+
+    return;
+  }
+
+  gallery.innerHTML = "";
+
+  for (const foto of fotos) {
+
+    const { data: signedData, error: signedError } =
+      await supabaseClient.storage
+        .from("recuerdos")
+        .createSignedUrl(
+          foto.ruta_storage,
+          3600
+        );
+
+    if (signedError) {
+      console.error(
+        "Error generando URL de foto:",
+        signedError
+      );
+
+      continue;
+    }
+
+    const card =
+      document.createElement("div");
+
+    card.className = "photo-card";
+
+    card.innerHTML = `
+      <img
+        src="${signedData.signedUrl}"
+        alt="${foto.nombre_archivo || "Foto del evento"}"
+      >
+
+      <div class="photo-info">
+        ${foto.nombre_archivo || "Fotografía"}
+      </div>
+    `;
+
+    gallery.appendChild(card);
+
+  }
+
+}
     async function protectPanel() {
 
       const {
@@ -592,6 +719,7 @@ async function loadStats() {
 
 await loadStats();
       await loadGuests();
+      await loadPhotos();
       loadingScreen.hidden = true;
       panelContent.hidden = false;
 
