@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Panel de gestión - Comunión Alejandro</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f3eb;
+      color: #35566d;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #315d78;
+      color: white;
+      padding: 22px 24px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    .logout-button {
+      border: 1px solid rgba(255,255,255,0.55);
+      background: transparent;
+      color: white;
+
+      padding: 10px 18px;
+      border-radius: 999px;
+
+      cursor: pointer;
+    }
+
+    .panel-container {
+      width: min(1200px, 94vw);
+      margin: 36px auto;
+    }
+
+    .welcome {
+      margin-bottom: 30px;
+    }
+
+    .welcome h2 {
+      font-family: Georgia, serif;
+      font-size: 34px;
+      font-weight: 400;
+      color: #315d78;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #74716c;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px 20px;
+      border-radius: 18px;
+
+      border: 1px solid rgba(180,157,112,0.18);
+
+      box-shadow:
+        0 10px 30px rgba(55,48,39,0.08);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #315d78;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #77716a;
+    }
+
+    .panel-section {
+      background: white;
+      padding: 26px;
+      border-radius: 20px;
+
+      border: 1px solid rgba(180,157,112,0.18);
+
+      box-shadow:
+        0 10px 30px rgba(55,48,39,0.08);
+
+      margin-bottom: 26px;
+    }
+
+    .panel-section h3 {
+      font-family: Georgia, serif;
+      font-size: 25px;
+      font-weight: 400;
+      color: #315d78;
+      margin-bottom: 12px;
+    }
+
+    .panel-section p {
+      color: #77716a;
+    }
+
+    .loading {
+      padding: 50px 20px;
+      text-align: center;
+      color: #77716a;
+    }
+
+    @media (max-width: 800px) {
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 500px) {
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div id="loadingScreen" class="loading">
+    Comprobando acceso...
+  </div>
+
+  <div id="panelContent" hidden>
+
+    <header>
+
+      <h1>
+        Comunión de Alejandro
+      </h1>
+
+      <button
+        type="button"
+        class="logout-button"
+        id="logoutButton"
+      >
+        Cerrar sesión
+      </button>
+
+    </header>
+
+
+    <main class="panel-container">
+
+      <section class="welcome">
+
+        <h2>
+          Panel de gestión
+        </h2>
+
+        <p id="adminEmail">
+          Cargando usuario...
+        </p>
+
+      </section>
+
+
+      <section class="stats">
+
+        <div class="stat-card">
+
+          <div
+            class="stat-number"
+            id="confirmedCount"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Confirmados
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div
+            class="stat-number"
+            id="declinedCount"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            No asistirán
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div
+            class="stat-number"
+            id="attendeesCount"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Personas
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div
+            class="stat-number"
+            id="photosCount"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Fotos recibidas
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="panel-section">
+
+        <h3>
+          Invitados
+        </h3>
+
+        <p>
+          Aquí mostraremos las confirmaciones,
+          alergias, transporte y mensajes.
+        </p>
+
+      </section>
+
+
+      <section class="panel-section">
+
+        <h3>
+          Recuerdos
+        </h3>
+
+        <p>
+          Aquí mostraremos las fotografías recibidas.
+        </p>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <script>
+
+    const SUPABASE_URL =
+      "https://txqqzyguzhvtfdmyzkfj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_msKobPJLUTjtLZx8ut9Cxg_894X6lxk";
+
+    const supabaseClient =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const panelContent =
+      document.getElementById("panelContent");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    const adminEmail =
+      document.getElementById("adminEmail");
+
+
+    async function protectPanel() {
+
+      const {
+        data: { session }
+      } =
+        await supabaseClient.auth.getSession();
+
+
+      if (!session) {
+
+        window.location.href =
+          "admin.html";
+
+        return;
+      }
+
+
+      adminEmail.textContent =
+        session.user.email;
+
+
+      loadingScreen.hidden = true;
+      panelContent.hidden = false;
+
+    }
+
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+          "admin.html";
+
+      }
+    );
+
+
+    protectPanel();
+
+  </script>
+
+</body>
+
+</html>
