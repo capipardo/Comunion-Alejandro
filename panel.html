@@ -150,7 +150,62 @@
       }
 
     }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 22px;
+}
 
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.guests-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+}
+
+.guests-table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7a6c58;
+  border-bottom: 1px solid #e5ddd0;
+}
+
+.guests-table td {
+  padding: 14px;
+  font-size: 14px;
+  color: #4f5960;
+  border-bottom: 1px solid #eee7dc;
+  vertical-align: top;
+}
+
+.guests-table tbody tr:hover {
+  background: #faf7f1;
+}
+
+.empty-row {
+  text-align: center !important;
+  color: #999 !important;
+  padding: 28px !important;
+}
+
+.status-yes {
+  color: #4f7a55;
+  font-weight: 600;
+}
+
+.status-no {
+  color: #a45b52;
+  font-weight: 600;
+}
   </style>
 
 </head>
@@ -263,18 +318,47 @@
       </section>
 
 
-      <section class="panel-section">
+     <section class="panel-section">
 
-        <h3>
-          Invitados
-        </h3>
+  <div class="section-header">
+    <div>
+      <h3>Invitados</h3>
+      <p>
+        Confirmaciones, alergias, transporte y mensajes.
+      </p>
+    </div>
+  </div>
 
-        <p>
-          Aquí mostraremos las confirmaciones,
-          alergias, transporte y mensajes.
-        </p>
+  <div class="table-wrapper">
 
-      </section>
+    <table class="guests-table">
+
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Asiste</th>
+          <th>Personas</th>
+          <th>Alergias</th>
+          <th>Transporte</th>
+          <th>Mensaje</th>
+        </tr>
+      </thead>
+
+      <tbody id="guestsTableBody">
+
+        <tr>
+          <td colspan="6" class="empty-row">
+            No hay confirmaciones todavía.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
 
 
       <section class="panel-section">
@@ -320,7 +404,91 @@
 
     const adminEmail =
       document.getElementById("adminEmail");
+async function loadGuests() {
 
+  const { data: invitados, error } =
+    await supabaseClient
+      .from("invitados")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+  const tableBody =
+    document.getElementById("guestsTableBody");
+
+  if (error) {
+    console.error("Error cargando invitados:", error);
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-row">
+          No se pudieron cargar los invitados.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  if (!invitados.length) {
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-row">
+          No hay confirmaciones todavía.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tableBody.innerHTML = invitados.map(invitado => {
+
+    const asistencia =
+      invitado.asistencia === "si"
+        ? `<span class="status-yes">Sí</span>`
+        : `<span class="status-no">No</span>`;
+
+    return `
+      <tr>
+
+        <td>
+          <strong>
+            ${invitado.nombre || ""}
+            ${invitado.apellidos || ""}
+          </strong>
+          <br>
+          <small>
+            ${invitado.telefono || ""}
+          </small>
+        </td>
+
+        <td>
+          ${asistencia}
+        </td>
+
+        <td>
+          ${invitado.asistentes ?? "-"}
+        </td>
+
+        <td>
+          ${invitado.alergias || "-"}
+        </td>
+
+        <td>
+          ${invitado.transporte || "-"}
+        </td>
+
+        <td>
+          ${invitado.mensaje || "-"}
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
 async function loadStats() {
 
   const {
@@ -423,6 +591,7 @@ async function loadStats() {
         session.user.email;
 
 await loadStats();
+      await loadGuests();
       loadingScreen.hidden = true;
       panelContent.hidden = false;
 
