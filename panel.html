@@ -251,6 +251,41 @@
     grid-template-columns: 1fr;
   }
 }
+    .photo-name {
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.photo-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.photo-button {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.download-button {
+  background: #4d7087;
+  color: white;
+}
+
+.delete-button {
+  background: #a85f56;
+  color: white;
+}
+
+.photo-button:hover {
+  opacity: 0.88;
+}
   </style>
 
 </head>
@@ -681,19 +716,110 @@ async function loadStats() {
 
     card.className = "photo-card";
 
-    card.innerHTML = `
-      <img
-        src="${signedData.signedUrl}"
-        alt="${foto.nombre_archivo || "Foto del evento"}"
-      >
+  card.innerHTML = `
+  <img
+    src="${signedData.signedUrl}"
+    alt="${foto.nombre_archivo || "Foto del evento"}"
+  >
 
-      <div class="photo-info">
-        ${foto.nombre_archivo || "Fotografía"}
-      </div>
-    `;
+  <div class="photo-info">
+
+    <div class="photo-name">
+      ${foto.nombre_archivo || "Fotografía"}
+    </div>
+
+    <div class="photo-actions">
+
+      <a
+        href="${signedData.signedUrl}"
+        download="${foto.nombre_archivo || "foto"}"
+        class="photo-button download-button"
+        target="_blank"
+      >
+        Descargar
+      </a>
+
+      <button
+        type="button"
+        class="photo-button delete-button"
+        data-id="${foto.id}"
+        data-path="${foto.ruta_storage}"
+      >
+        Eliminar
+      </button>
+
+    </div>
+
+  </div>
+`;
 
     gallery.appendChild(card);
+const deleteButton =
+  card.querySelector(".delete-button");
 
+deleteButton.addEventListener(
+  "click",
+  async () => {
+
+    const confirmar =
+      confirm(
+        "¿Seguro que quieres eliminar esta fotografía?"
+      );
+
+    if (!confirmar) {
+      return;
+    }
+
+    deleteButton.disabled = true;
+    deleteButton.textContent = "Eliminando...";
+
+    const { error: storageError } =
+      await supabaseClient.storage
+        .from("recuerdos")
+        .remove([foto.ruta_storage]);
+
+    if (storageError) {
+
+      console.error(
+        "Error eliminando archivo:",
+        storageError
+      );
+
+      alert(
+        "No se pudo eliminar la fotografía."
+      );
+
+      deleteButton.disabled = false;
+      deleteButton.textContent = "Eliminar";
+
+      return;
+    }
+
+    const { error: dbError } =
+      await supabaseClient
+        .from("fotos")
+        .delete()
+        .eq("id", foto.id);
+
+    if (dbError) {
+
+      console.error(
+        "Error eliminando registro:",
+        dbError
+      );
+
+      alert(
+        "La fotografía se eliminó del almacenamiento, pero hubo un problema actualizando el registro."
+      );
+
+      return;
+    }
+
+    await loadStats();
+    await loadPhotos();
+
+  }
+);
   }
 
 }
