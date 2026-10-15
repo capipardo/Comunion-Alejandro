@@ -364,6 +364,19 @@
     width: 100%;
   }
 }
+    .delete-guest-button {
+  padding: 7px 11px;
+  border: none;
+  border-radius: 999px;
+  background: #a85f56;
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.delete-guest-button:hover {
+  opacity: 0.88;
+}
   </style>
 
 </head>
@@ -564,13 +577,14 @@
           <th>Alergias</th>
           <th>Transporte</th>
           <th>Mensaje</th>
+          <th>Acciones</th>
         </tr>
       </thead>
 
       <tbody id="guestsTableBody">
 
         <tr>
-          <td colspan="6" class="empty-row">
+          <td colspan="7" class="empty-row">
             No hay confirmaciones todavía.
           </td>
         </tr>
@@ -649,7 +663,7 @@ async function loadGuests() {
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-row">
+        <td colspan="7" class="empty-row">
           No se pudieron cargar los invitados.
         </td>
       </tr>
@@ -662,7 +676,7 @@ async function loadGuests() {
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-row">
+        <td colspan="7" class="empty-row">
           No hay confirmaciones todavía.
         </td>
       </tr>
@@ -935,7 +949,7 @@ function renderGuests(invitados) {
 
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-row">
+        <td colspan="7" class="empty-row">
           No hay invitados que coincidan.
         </td>
       </tr>
@@ -980,13 +994,25 @@ function renderGuests(invitados) {
         </td>
 
         <td>
-          ${invitado.mensaje || "-"}
-        </td>
+         <td>
+  ${invitado.mensaje || "-"}
+</td>
+
+<td>
+  <button
+    type="button"
+    class="delete-guest-button"
+    data-id="${invitado.id}"
+  >
+    Eliminar
+  </button>
+</td>
 
       </tr>
     `;
 
   }).join("");
+  activateGuestDeleteButtons();
 }
 
 
@@ -1149,6 +1175,62 @@ document
 
     }
   );
+    function activateGuestDeleteButtons() {
+
+  document
+    .querySelectorAll(".delete-guest-button")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        async () => {
+
+          const confirmar =
+            confirm(
+              "¿Seguro que quieres eliminar este invitado?"
+            );
+
+          if (!confirmar) {
+            return;
+          }
+
+          const guestId =
+            button.dataset.id;
+
+          button.disabled = true;
+          button.textContent = "Eliminando...";
+
+          const { error } =
+            await supabaseClient
+              .from("invitados")
+              .delete()
+              .eq("id", guestId);
+
+          if (error) {
+
+            console.error(
+              "Error eliminando invitado:",
+              error
+            );
+
+            alert(
+              "No se pudo eliminar el invitado."
+            );
+
+            button.disabled = false;
+            button.textContent = "Eliminar";
+
+            return;
+          }
+
+          await loadStats();
+          await loadGuests();
+
+        }
+      );
+
+    });
+}
     async function protectPanel() {
 
       const {
