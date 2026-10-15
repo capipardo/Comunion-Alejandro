@@ -321,7 +321,87 @@
     const adminEmail =
       document.getElementById("adminEmail");
 
+async function loadStats() {
 
+  const {
+    data: invitados,
+    error: invitadosError
+  } = await supabaseClient
+    .from("invitados")
+    .select("*");
+
+
+  if (invitadosError) {
+
+    console.error(
+      "Error cargando invitados:",
+      invitadosError
+    );
+
+    return;
+  }
+
+
+  const confirmados =
+    invitados.filter(
+      invitado => invitado.asistencia === "si"
+    );
+
+  const noAsisten =
+    invitados.filter(
+      invitado => invitado.asistencia === "no"
+    );
+
+
+  const totalPersonas =
+    confirmados.reduce(
+      (total, invitado) =>
+        total + (Number(invitado.asistentes) || 0),
+      0
+    );
+
+
+  const {
+    count: totalFotos,
+    error: fotosError
+  } = await supabaseClient
+    .from("fotos")
+    .select("*", {
+      count: "exact",
+      head: true
+    });
+
+
+  if (fotosError) {
+
+    console.error(
+      "Error cargando fotos:",
+      fotosError
+    );
+
+  }
+
+
+  document.getElementById(
+    "confirmedCount"
+  ).textContent = confirmados.length;
+
+
+  document.getElementById(
+    "declinedCount"
+  ).textContent = noAsisten.length;
+
+
+  document.getElementById(
+    "attendeesCount"
+  ).textContent = totalPersonas;
+
+
+  document.getElementById(
+    "photosCount"
+  ).textContent = totalFotos || 0;
+
+}
     async function protectPanel() {
 
       const {
@@ -342,7 +422,7 @@
       adminEmail.textContent =
         session.user.email;
 
-
+await loadStats();
       loadingScreen.hidden = true;
       panelContent.hidden = false;
 
