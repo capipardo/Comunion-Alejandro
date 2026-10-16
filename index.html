@@ -391,6 +391,36 @@ display: block;
     }
 
     @media (max-width: 700px) {
+      .hero {
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero::before {
+  inset: -12px;
+  background-position: center center;
+  background-size: cover;
+  transform: scale(1.03);
+  filter: blur(4px);
+}
+
+.hero-content {
+  width: 92%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 26px 18px;
+}
+
+body {
+  overflow-x: hidden;
+}
+      html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
       .counter {
         grid-template-columns: repeat(2, 1fr);
       }
