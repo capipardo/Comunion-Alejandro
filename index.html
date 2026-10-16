@@ -1676,11 +1676,37 @@ text-decoration: none;
 
     setInterval(updateCountdown, 1000);
     
-    history.scrollRestoration = "manual";
+   history.scrollRestoration = "manual";
 
 window.addEventListener("load", function() {
-  window.scrollTo(0, 0);
+
+  if (window.location.hash) {
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
+  }
+
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "auto"
+  });
+
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   document.body.style.overflow = "hidden";
+
+});
+    window.addEventListener("pageshow", function() {
+
+  window.scrollTo(0, 0);
+
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
 });
 function openInvitation() {
   const music = document.getElementById("background-music");
